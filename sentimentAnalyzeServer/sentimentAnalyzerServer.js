@@ -9,8 +9,8 @@ const cors_app = require('cors');
 app.use(cors_app());
 
 function getNLUInstance() {
-    let api_key = process.env.api_key;
-    let api_url = process.env.api_url;
+    let api_key = process.env.API_KEY;
+    let api_url = process.env.API_URL;
 
     const NaturalLanguageUnderstandingV1 = require('ibm-watson/natural-language-understanding/v1');
     const { IamAuthenticator } = require('ibm-watson/auth');
@@ -30,20 +30,55 @@ app.get("/", (req, res) => {
 });
 
 app.get("/url/emotion", (req, res) => {
+    const nluInstance = getNLUInstance();
 
-    return res.send({ "happy": "90", "sad": "10" });
+    nluInstance.analyze({ 'url': req.query.url, 'features': { 'entities': { 'emotion': true, 'limit': 2 } } })
+    .then(analysisResults => {
+        console.log(JSON.stringify(analysisResults, null, 2));
+        res.json(analysisResults);
+    }).catch(err => {
+        console.log('error:', err);
+        res.send(err);
+    });
 });
 
 app.get("/url/sentiment", (req, res) => {
-    return res.send("url sentiment for " + req.query.url);
+    const nluInstance = getNLUInstance();
+
+    nluInstance.analyze({ 'url': req.query.url, 'features': { 'entities': { 'sentiment': true, 'limit': 2 } } })
+    .then(analysisResults => {
+        console.log(JSON.stringify(analysisResults, null, 2));
+        res.json(analysisResults);
+    }).catch(err => {
+        console.log('error:', err);
+        res.send(err);
+    });
 });
 
 app.get("/text/emotion", (req, res) => {
-    return res.send({ "happy": "10", "sad": "90" });
+    const nluInstance = getNLUInstance();
+
+    nluInstance.analyze({ 'text': req.query.text, 'features': { 'entities': { 'emotion': true, 'limit': 2 } } })
+    .then(analysisResults => {
+        console.log(JSON.stringify(analysisResults, null, 2));
+        res.json(analysisResults);
+    }).catch(err => {
+        console.log('error:', err);
+        res.send(err);
+    });
 });
 
 app.get("/text/sentiment", (req, res) => {
-    return res.send("text sentiment for " + req.query.text);
+    const nluInstance = getNLUInstance();
+
+    nluInstance.analyze({ 'text': req.query.text, 'features': { 'entities': { 'sentiment': true, 'limit': 2 } } })
+    .then(analysisResults => {
+        console.log(JSON.stringify(analysisResults, null, 2));
+        res.json(analysisResults);
+    }).catch(err => {
+        console.log('error:', err);
+        res.send(err);
+    });
 });
 
 let server = app.listen(8080, () => {
