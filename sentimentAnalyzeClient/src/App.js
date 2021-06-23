@@ -33,7 +33,7 @@ class App extends React.Component {
     }
   }
 
-  sendForSentimentAnalysis = () => {
+  sendForSentimentAnalysis = (type) => {
     this.setState({sentiment:true});
     let ret = "";
     let url = ".";
@@ -47,15 +47,19 @@ class App extends React.Component {
     ret.then((response)=>{
 
       //Include code here to check the sentiment and fomrat the data accordingly
-
-      this.setState({sentimentOutput:response.data});
+      let sentiment;
+      if(type === 'url')
+        sentiment = response.data.result.entities[0].sentiment.label;
+      else
+        sentiment = response.data.result.keywords[0].sentiment.label;
+      this.setState({sentimentOutput:sentiment});
       let output = response.data;
-      if(response.data === "positive") {
-        output = <div style={{color:"green",fontSize:20}}>{response.data}</div>
-      } else if (response.data === "negative"){
-        output = <div style={{color:"red",fontSize:20}}>{response.data}</div>
+      if(sentiment === "positive") {
+        output = <div style={{color:"green",fontSize:20}}>{sentiment}</div>
+      } else if (sentiment === "negative"){
+        output = <div style={{color:"red",fontSize:20}}>{sentiment}</div>
       } else {
-        output = <div style={{color:"orange",fontSize:20}}>{response.data}</div>
+        output = <div style={{color:"orange",fontSize:20}}>{sentiment}</div>
       }
       this.setState({sentimentOutput:output});
     });
@@ -73,7 +77,7 @@ class App extends React.Component {
     ret = axios.get(url);
 
     ret.then((response)=>{
-      this.setState({sentimentOutput:<EmotionTable emotions={response.data}/>});
+      this.setState({sentimentOutput:<EmotionTable emotions={response.data} type={this.state.mode}/>});
   });
   }
   

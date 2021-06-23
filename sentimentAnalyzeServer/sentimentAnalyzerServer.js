@@ -58,7 +58,7 @@ app.get("/url/sentiment", (req, res) => {
 app.get("/text/emotion", (req, res) => {
     const nluInstance = getNLUInstance();
 
-    nluInstance.analyze({ 'text': req.query.text, 'features': { 'entities': { 'emotion': true, 'limit': 2 } } })
+    nluInstance.analyze({ 'text': req.query.text, 'features': { 'keywords': { 'emotion': true, 'limit': 2 } } })
     .then(analysisResults => {
         console.log(JSON.stringify(analysisResults, null, 2));
         res.json(analysisResults);
@@ -71,7 +71,7 @@ app.get("/text/emotion", (req, res) => {
 app.get("/text/sentiment", (req, res) => {
     const nluInstance = getNLUInstance();
 
-    nluInstance.analyze({ 'text': req.query.text, 'features': { 'entities': { 'sentiment': true, 'limit': 2 } } })
+    nluInstance.analyze({ 'text': req.query.text, 'features': { 'keywords': { 'sentiment': true, 'limit': 2 } } })
     .then(analysisResults => {
         console.log(JSON.stringify(analysisResults, null, 2));
         res.json(analysisResults);
